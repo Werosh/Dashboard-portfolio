@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import { motion } from "framer-motion";
 import {
   GraduationCap,
   Briefcase,
@@ -7,19 +7,19 @@ import {
   Building2,
   ExternalLink,
   Star,
-} from 'lucide-react';
-import { Card } from '../../components/Card';
-import { PageTransition } from '../../components/PageTransition';
-import { SectionHeader } from '../../components/SectionHeader';
+} from "lucide-react";
+import { Card } from "../../components/Card";
+import { PageTransition } from "../../components/PageTransition";
+import { SectionHeader } from "../../components/SectionHeader";
 import {
   staggerContainer,
   staggerItem,
   fadeIn,
-} from '../../utils/motionPresets';
+} from "../../utils/motionPresets";
 
 interface TimelineEntry {
   id: string;
-  type: 'education' | 'experience';
+  type: "education" | "experience";
   title: string;
   organization: string;
   location: string;
@@ -90,27 +90,28 @@ const experienceData = {
     icon: Briefcase,
     items: [
       {
-        id: "work-1",
-        title: "SENIOR WEB DEVELOPER",
-        subtitle: "Nebula Arcs",
-        period: "2024 - 2025",
-        location: "Sri Lanka (Remote & On-site)",
-        website: "https://nebulaarcs.com",
+        id: "work-3",
+        title: "SOFTWARE ENGINEER INTERN",
+        subtitle: "Ranga Technologies",
+        period: "Sep 2025 - Present · Frontend",
+        location: "Hybrid · Sri Lanka & Remote",
+        website: "https://www.rangatechnologies.com/",
+        linkedin:
+          "https://www.linkedin.com/company/rangatechnologies/posts/?feedView=all",
         description:
-          "Spearheaded high-performance web development projects, delivering innovative, user-centric digital solutions. Collaborated closely with designers and clients to translate visions into scalable, optimized products. Oversaw end-to-end project execution while ensuring top-tier code quality and performance.",
+          "Delivering polished, high-performing frontend experiences for customer-facing platforms. Focused on accessible UI systems, rapid iteration with cross-functional squads, and infusing GenAI-enhanced workflows into production-ready codebases.",
         skills: [
           "React",
-          "Next.js",
-          "Tailwind CSS",
           "TypeScript",
-          "UI/UX Implementation",
-          "Project Leadership",
+          "Design Systems",
+          "Accessibility",
+          "Frontend Performance",
+          "AI-assisted Development",
         ],
         achievements: [
-          "15+ High-Impact Projects Delivered",
-          "Improved Page Load Speeds by 40%",
-          "Maintained 100% Client Retention Rate",
-          "Introduced AI-Driven Development Workflows",
+          "Modernizing the shared component library to boost delivery velocity",
+          "Driving measurable gains in interaction latency and Lighthouse metrics",
+          "Championing UI polish standards through code reviews and paired sessions",
         ],
         level: "primary",
       },
@@ -140,28 +141,27 @@ const experienceData = {
         level: "primary",
       },
       {
-        id: "work-3",
-        title: "SOFTWARE ENGINEER INTERN",
-        subtitle: "Ranga Technologies",
-        period: "Sep 2025 - Present · Frontend",
-        location: "Hybrid · Sri Lanka & Remote",
-        website: "https://www.rangatechnologies.com/",
-        linkedin:
-          "https://www.linkedin.com/company/rangatechnologies/posts/?feedView=all",
+        id: "work-1",
+        title: "SENIOR WEB DEVELOPER",
+        subtitle: "Nebula Arcs",
+        period: "2024 - 2025",
+        location: "Sri Lanka (Remote & On-site)",
+        website: "https://nebulaarcs.com",
         description:
-          "Delivering polished, high-performing frontend experiences for customer-facing platforms. Focused on accessible UI systems, rapid iteration with cross-functional squads, and infusing GenAI-enhanced workflows into production-ready codebases.",
+          "Spearheaded high-performance web development projects, delivering innovative, user-centric digital solutions. Collaborated closely with designers and clients to translate visions into scalable, optimized products. Oversaw end-to-end project execution while ensuring top-tier code quality and performance.",
         skills: [
           "React",
+          "Next.js",
+          "Tailwind CSS",
           "TypeScript",
-          "Design Systems",
-          "Accessibility",
-          "Frontend Performance",
-          "AI-assisted Development",
+          "UI/UX Implementation",
+          "Project Leadership",
         ],
         achievements: [
-          "Modernizing the shared component library to boost delivery velocity",
-          "Driving measurable gains in interaction latency and Lighthouse metrics",
-          "Championing UI polish standards through code reviews and paired sessions",
+          "15+ High-Impact Projects Delivered",
+          "Improved Page Load Speeds by 40%",
+          "Maintained 100% Client Retention Rate",
+          "Introduced AI-Driven Development Workflows",
         ],
         level: "primary",
       },
@@ -193,60 +193,71 @@ const experienceData = {
 };
 
 // Helper function to parse period string to dates
-const parsePeriod = (period: string): { startDate: string; endDate: string; isCurrent: boolean } => {
-  const isCurrent = period.toLowerCase().includes('present');
-  
+const parsePeriod = (
+  period: string
+): { startDate: string; endDate: string; isCurrent: boolean } => {
+  const isCurrent = period.toLowerCase().includes("present");
+
   // Handle formats like "2023 - Present", "2024 - 2025", "Sep 2025 - Present"
-  const parts = period.split('-').map(p => p.trim());
-  
+  const parts = period.split("-").map((p) => p.trim());
+
   if (parts.length === 2) {
     let startStr = parts[0];
     let endStr = parts[1];
-    
+
     // Parse start date
-    let startDate = '';
+    let startDate = "";
     if (startStr.match(/^\d{4}$/)) {
       // Just year like "2023"
       startDate = `${startStr}-01`;
     } else if (startStr.match(/^[A-Za-z]{3} \d{4}$/)) {
       // Month year like "Sep 2025"
-      const [month, year] = startStr.split(' ');
+      const [month, year] = startStr.split(" ");
       const monthMap: { [key: string]: string } = {
-        'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04',
-        'May': '05', 'Jun': '06', 'Jul': '07', 'Aug': '08',
-        'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'
+        Jan: "01",
+        Feb: "02",
+        Mar: "03",
+        Apr: "04",
+        May: "05",
+        Jun: "06",
+        Jul: "07",
+        Aug: "08",
+        Sep: "09",
+        Oct: "10",
+        Nov: "11",
+        Dec: "12",
       };
-      startDate = `${year}-${monthMap[month] || '01'}`;
+      startDate = `${year}-${monthMap[month] || "01"}`;
     } else {
       startDate = `${startStr}-01`;
     }
-    
+
     // Parse end date
-    let endDate = '';
-    if (isCurrent || endStr.toLowerCase() === 'present') {
-      endDate = '';
+    let endDate = "";
+    if (isCurrent || endStr.toLowerCase() === "present") {
+      endDate = "";
     } else if (endStr.match(/^\d{4}$/)) {
       endDate = `${endStr}-12`;
     } else {
-      endDate = '';
+      endDate = "";
     }
-    
+
     return { startDate, endDate, isCurrent };
   }
-  
-  return { startDate: '', endDate: '', isCurrent: false };
+
+  return { startDate: "", endDate: "", isCurrent: false };
 };
 
 // Transform experience data to timeline format
 const transformToTimelineData = (): TimelineEntry[] => {
   const timelineEntries: TimelineEntry[] = [];
-  
+
   // Transform education items
   experienceData.education.items.forEach((item) => {
     const { startDate, endDate, isCurrent } = parsePeriod(item.period);
     timelineEntries.push({
       id: item.id,
-      type: 'education',
+      type: "education",
       title: item.title,
       organization: item.subtitle,
       location: item.location,
@@ -258,13 +269,13 @@ const transformToTimelineData = (): TimelineEntry[] => {
       achievements: item.achievements,
     });
   });
-  
+
   // Transform work experience items
   experienceData.work.items.forEach((item) => {
     const { startDate, endDate, isCurrent } = parsePeriod(item.period);
     timelineEntries.push({
       id: item.id,
-      type: 'experience',
+      type: "experience",
       title: item.title,
       organization: item.subtitle,
       location: item.location,
@@ -278,28 +289,23 @@ const transformToTimelineData = (): TimelineEntry[] => {
       achievements: item.achievements,
     });
   });
-  
+
   return timelineEntries;
 };
 
 const timelineData = transformToTimelineData();
 
 export const Timeline: React.FC = () => {
-  const sortedEntries = [...timelineData].sort((a, b) => {
-    const dateA = a.endDate || a.startDate;
-    const dateB = b.endDate || b.startDate;
-    return dateB.localeCompare(dateA);
-  });
-
-  const educationEntries = sortedEntries.filter((e) => e.type === 'education');
-  const experienceEntries = sortedEntries.filter((e) => e.type === 'experience');
+  // Keep entries in their original order (no sorting)
+  const educationEntries = timelineData.filter((e) => e.type === "education");
+  const experienceEntries = timelineData.filter((e) => e.type === "experience");
 
   const formatDate = (dateString: string) => {
-    if (!dateString) return 'Present';
+    if (!dateString) return "Present";
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      month: 'short',
-      year: 'numeric',
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      year: "numeric",
     });
   };
 
@@ -321,123 +327,6 @@ export const Timeline: React.FC = () => {
 
         {/* Timeline Content */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Education Timeline */}
-          <motion.div
-            variants={fadeIn}
-            initial="hidden"
-            animate="visible"
-            className="space-y-4"
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-lg bg-[var(--primary)]/20 border border-[var(--primary)] flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-[var(--primary)]" />
-              </div>
-              <h2 className="text-2xl font-bold text-[var(--text)]">Education</h2>
-            </div>
-
-            <div className="relative">
-              {/* Timeline Line */}
-              <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[var(--primary)] via-[var(--primary)]/50 to-[var(--border)]" />
-
-              <div className="space-y-6">
-                {educationEntries.map((entry, index) => (
-                  <motion.div
-                    key={entry.id}
-                    variants={staggerItem}
-                    initial="hidden"
-                    animate="visible"
-                    className="relative pl-14"
-                  >
-                    {/* Timeline Dot */}
-                    <motion.div
-                      className="absolute left-4 top-2 w-4 h-4 rounded-full bg-[var(--primary)] border-4 border-[var(--panel)] z-10 shadow-lg"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      transition={{ delay: index * 0.1, type: 'spring' }}
-                    />
-
-                    {/* Entry Card - OS Style Window */}
-                    <Card className="hover:border-[var(--primary)]/50 transition-all group">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <h3 className="text-xl font-bold text-[var(--text)] group-hover:text-[var(--primary)] transition-colors">
-                              {entry.title}
-                            </h3>
-                            {entry.isCurrent && (
-                              <span className="px-2 py-1 bg-[var(--primary)] text-white text-xs font-bold uppercase rounded animate-pulse">
-                                Current
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-[var(--primary)] font-semibold mb-3">
-                            <Building2 className="w-4 h-4" />
-                            {entry.organization}
-                          </div>
-                          <div className="flex flex-wrap items-center gap-4 text-xs text-[var(--text)]/60 mb-3">
-                            <div className="flex items-center gap-1.5">
-                              <MapPin className="w-3.5 h-3.5" />
-                              {entry.location}
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                              <Calendar className="w-3.5 h-3.5" />
-                              {formatDate(entry.startDate)} - {formatDate(entry.endDate)}
-                            </div>
-                          </div>
-                          <p className="text-sm text-[var(--text)]/80 leading-relaxed mb-3">
-                            {entry.description}
-                          </p>
-                          
-                          {/* Skills */}
-                          {entry.skills && entry.skills.length > 0 && (
-                            <div className="mb-3">
-                              <h4 className="text-xs font-semibold text-[var(--text)]/70 mb-2 uppercase tracking-wider">
-                                Skills
-                              </h4>
-                              <div className="flex flex-wrap gap-2">
-                                {entry.skills.map((skill, idx) => (
-                                  <span
-                                    key={idx}
-                                    className="px-2 py-1 text-xs font-medium bg-[var(--bg)] border border-[var(--border)] rounded text-[var(--text)]/80"
-                                  >
-                                    {skill}
-                                  </span>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                          
-                          {/* Achievements */}
-                          {entry.achievements && entry.achievements.length > 0 && (
-                            <div>
-                              <h4 className="text-xs font-semibold text-[var(--text)]/70 mb-2 uppercase tracking-wider">
-                                Achievements
-                              </h4>
-                              <div className="space-y-1">
-                                {entry.achievements.map((achievement, idx) => (
-                                  <div key={idx} className="flex items-start gap-2 text-xs text-[var(--text)]/70">
-                                    <Star className="w-3 h-3 text-[var(--primary)] mt-0.5 flex-shrink-0" />
-                                    <span>{achievement}</span>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </Card>
-                  </motion.div>
-                ))}
-                {educationEntries.length === 0 && (
-                  <div className="pl-14 text-center py-12 text-[var(--text)]/50">
-                    <GraduationCap className="w-12 h-12 mx-auto mb-3 opacity-30" />
-                    <p>No education entries to display.</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </motion.div>
-
           {/* Experience Timeline */}
           <motion.div
             variants={fadeIn}
@@ -449,7 +338,9 @@ export const Timeline: React.FC = () => {
               <div className="w-12 h-12 rounded-lg bg-[var(--primary)]/20 border border-[var(--primary)] flex items-center justify-center">
                 <Briefcase className="w-6 h-6 text-[var(--primary)]" />
               </div>
-              <h2 className="text-2xl font-bold text-[var(--text)]">Experience</h2>
+              <h2 className="text-2xl font-bold text-[var(--text)]">
+                Experience
+              </h2>
             </div>
 
             <div className="relative">
@@ -470,7 +361,7 @@ export const Timeline: React.FC = () => {
                       className="absolute left-4 top-2 w-4 h-4 rounded-full bg-[var(--primary)] border-4 border-[var(--panel)] z-10 shadow-lg"
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
-                      transition={{ delay: index * 0.1, type: 'spring' }}
+                      transition={{ delay: index * 0.1, type: "spring" }}
                     />
 
                     {/* Entry Card - OS Style Window */}
@@ -498,13 +389,14 @@ export const Timeline: React.FC = () => {
                             </div>
                             <div className="flex items-center gap-1.5">
                               <Calendar className="w-3.5 h-3.5" />
-                              {formatDate(entry.startDate)} - {formatDate(entry.endDate)}
+                              {formatDate(entry.startDate)} -{" "}
+                              {formatDate(entry.endDate)}
                             </div>
                           </div>
                           <p className="text-sm text-[var(--text)]/80 leading-relaxed mb-3">
                             {entry.description}
                           </p>
-                          
+
                           {/* Links */}
                           {(entry.website || entry.linkedin) && (
                             <div className="flex flex-wrap gap-3 mb-3">
@@ -532,7 +424,7 @@ export const Timeline: React.FC = () => {
                               )}
                             </div>
                           )}
-                          
+
                           {/* Skills */}
                           {entry.skills && entry.skills.length > 0 && (
                             <div className="mb-3">
@@ -551,23 +443,29 @@ export const Timeline: React.FC = () => {
                               </div>
                             </div>
                           )}
-                          
+
                           {/* Achievements */}
-                          {entry.achievements && entry.achievements.length > 0 && (
-                            <div>
-                              <h4 className="text-xs font-semibold text-[var(--text)]/70 mb-2 uppercase tracking-wider">
-                                Achievements
-                              </h4>
-                              <div className="space-y-1">
-                                {entry.achievements.map((achievement, idx) => (
-                                  <div key={idx} className="flex items-start gap-2 text-xs text-[var(--text)]/70">
-                                    <Star className="w-3 h-3 text-[var(--primary)] mt-0.5 flex-shrink-0" />
-                                    <span>{achievement}</span>
-                                  </div>
-                                ))}
+                          {entry.achievements &&
+                            entry.achievements.length > 0 && (
+                              <div>
+                                <h4 className="text-xs font-semibold text-[var(--text)]/70 mb-2 uppercase tracking-wider">
+                                  Achievements
+                                </h4>
+                                <div className="space-y-1">
+                                  {entry.achievements.map(
+                                    (achievement, idx) => (
+                                      <div
+                                        key={idx}
+                                        className="flex items-start gap-2 text-xs text-[var(--text)]/70"
+                                      >
+                                        <Star className="w-3 h-3 text-[var(--primary)] mt-0.5 flex-shrink-0" />
+                                        <span>{achievement}</span>
+                                      </div>
+                                    )
+                                  )}
+                                </div>
                               </div>
-                            </div>
-                          )}
+                            )}
                         </div>
                       </div>
                     </Card>
@@ -577,6 +475,132 @@ export const Timeline: React.FC = () => {
                   <div className="pl-14 text-center py-12 text-[var(--text)]/50">
                     <Briefcase className="w-12 h-12 mx-auto mb-3 opacity-30" />
                     <p>No experience entries to display.</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Education Timeline */}
+          <motion.div
+            variants={fadeIn}
+            initial="hidden"
+            animate="visible"
+            className="space-y-4"
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-12 h-12 rounded-lg bg-[var(--primary)]/20 border border-[var(--primary)] flex items-center justify-center">
+                <GraduationCap className="w-6 h-6 text-[var(--primary)]" />
+              </div>
+              <h2 className="text-2xl font-bold text-[var(--text)]">
+                Education
+              </h2>
+            </div>
+
+            <div className="relative">
+              {/* Timeline Line */}
+              <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-[var(--primary)] via-[var(--primary)]/50 to-[var(--border)]" />
+
+              <div className="space-y-6">
+                {educationEntries.map((entry, index) => (
+                  <motion.div
+                    key={entry.id}
+                    variants={staggerItem}
+                    initial="hidden"
+                    animate="visible"
+                    className="relative pl-14"
+                  >
+                    {/* Timeline Dot */}
+                    <motion.div
+                      className="absolute left-4 top-2 w-4 h-4 rounded-full bg-[var(--primary)] border-4 border-[var(--panel)] z-10 shadow-lg"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ delay: index * 0.1, type: "spring" }}
+                    />
+
+                    {/* Entry Card - OS Style Window */}
+                    <Card className="hover:border-[var(--primary)]/50 transition-all group">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <h3 className="text-xl font-bold text-[var(--text)] group-hover:text-[var(--primary)] transition-colors">
+                              {entry.title}
+                            </h3>
+                            {entry.isCurrent && (
+                              <span className="px-2 py-1 bg-[var(--primary)] text-white text-xs font-bold uppercase rounded animate-pulse">
+                                Current
+                              </span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-[var(--primary)] font-semibold mb-3">
+                            <Building2 className="w-4 h-4" />
+                            {entry.organization}
+                          </div>
+                          <div className="flex flex-wrap items-center gap-4 text-xs text-[var(--text)]/60 mb-3">
+                            <div className="flex items-center gap-1.5">
+                              <MapPin className="w-3.5 h-3.5" />
+                              {entry.location}
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                              <Calendar className="w-3.5 h-3.5" />
+                              {formatDate(entry.startDate)} -{" "}
+                              {formatDate(entry.endDate)}
+                            </div>
+                          </div>
+                          <p className="text-sm text-[var(--text)]/80 leading-relaxed mb-3">
+                            {entry.description}
+                          </p>
+
+                          {/* Skills */}
+                          {entry.skills && entry.skills.length > 0 && (
+                            <div className="mb-3">
+                              <h4 className="text-xs font-semibold text-[var(--text)]/70 mb-2 uppercase tracking-wider">
+                                Skills
+                              </h4>
+                              <div className="flex flex-wrap gap-2">
+                                {entry.skills.map((skill, idx) => (
+                                  <span
+                                    key={idx}
+                                    className="px-2 py-1 text-xs font-medium bg-[var(--bg)] border border-[var(--border)] rounded text-[var(--text)]/80"
+                                  >
+                                    {skill}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Achievements */}
+                          {entry.achievements &&
+                            entry.achievements.length > 0 && (
+                              <div>
+                                <h4 className="text-xs font-semibold text-[var(--text)]/70 mb-2 uppercase tracking-wider">
+                                  Achievements
+                                </h4>
+                                <div className="space-y-1">
+                                  {entry.achievements.map(
+                                    (achievement, idx) => (
+                                      <div
+                                        key={idx}
+                                        className="flex items-start gap-2 text-xs text-[var(--text)]/70"
+                                      >
+                                        <Star className="w-3 h-3 text-[var(--primary)] mt-0.5 flex-shrink-0" />
+                                        <span>{achievement}</span>
+                                      </div>
+                                    )
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                    </Card>
+                  </motion.div>
+                ))}
+                {educationEntries.length === 0 && (
+                  <div className="pl-14 text-center py-12 text-[var(--text)]/50">
+                    <GraduationCap className="w-12 h-12 mx-auto mb-3 opacity-30" />
+                    <p>No education entries to display.</p>
                   </div>
                 )}
               </div>

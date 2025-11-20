@@ -21,7 +21,7 @@ const navItems: NavItem[] = [
   { path: "/", label: "Home", icon: Home },
   { path: "/projects", label: "Projects", icon: FolderKanban },
   { path: "/about", label: "About", icon: User },
-  { path: "/timeline", label: "Timeline", icon: Calendar },
+  { path: "/timeline", label: "Experience Hub", icon: Calendar },
   { path: "/contact", label: "Contact", icon: Mail },
 ];
 
