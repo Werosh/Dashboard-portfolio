@@ -25,26 +25,25 @@ import { useWindow } from "../../context/WindowContext";
 import { staggerContainer, staggerItem } from "../../utils/motionPresets";
 import { useState, useRef } from "react";
 
-// Project Images - Update these paths to match your actual image locations
-// For now using placeholder paths - you'll need to add the actual images to your assets folder
-import YummyImg from "../../assets/images/projects/yummy.png";
-import NebulaImg from "../../assets/images/projects/nebula.jpg";
-import NextGImg from "../../assets/images/projects/nextg.png";
-import SPCImg from "../../assets/images/projects/spc.png";
-import ExlImg from "../../assets/images/projects/exl.jpg";
-import StudyMateImg from "../../assets/images/projects/studymate.jpg";
-import BusMateImg from "../../assets/images/projects/busmate.png";
-import AIWriteCheckerImg from "../../assets/images/projects/aiwrite.png";
-import GardImg from "../../assets/images/projects/gardningtemp.png";
-import jobportal from "../../assets/images/projects/jobportal.png";
-import aquaImg from "../../assets/images/projects/aqua.png";
-import LSMImg from "../../assets/images/projects/lsm.png";
-import salonIMg from "../../assets/images/projects/ims.png";
-import AlphaIMg from "../../assets/images/projects/alpha.png";
-import sentryIMg from "../../assets/images/projects/sentry.png";
-import libryIMg from "../../assets/images/projects/libry.png";
-import bluhIMg from "../../assets/images/projects/bluhdev.png";
-import herbIMg from "../../assets/images/projects/herb.png";
+// Project Images - Using public folder paths
+const YummyImg = "/images/projects/yummy.webp";
+const NebulaImg = "/images/projects/nebula.webp";
+const NextGImg = "/images/projects/nextg.webp";
+const SPCImg = "/images/projects/spc.webp";
+const ExlImg = "/images/projects/exl.webp";
+const StudyMateImg = "/images/projects/studymate.webp";
+const BusMateImg = "/images/projects/busmate.webp";
+const AIWriteCheckerImg = "/images/projects/aiwrite.webp";
+const GardImg = "/images/projects/gardningtemp.webp";
+const jobportal = "/images/projects/jobportal.webp";
+const aquaImg = "/images/projects/aqua.webp";
+const LSMImg = "/images/projects/lsm.webp";
+const salonIMg = "/images/projects/ims.webp";
+const AlphaIMg = "/images/projects/alpha.webp";
+const sentryIMg = "/images/projects/sentry.webp";
+const libryIMg = "/images/projects/libry.webp";
+const bluhIMg = "/images/projects/bluhdev.webp";
+const herbIMg = "/images/projects/herb.webp";
 
 export const Projects: React.FC = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -102,6 +101,7 @@ export const Projects: React.FC = () => {
       demo: "https://www.nextgenwebsites.info/",
       longDescription:
         "Affordable and professional web development services for businesses worldwide",
+      image: NextGImg,
     },
     {
       id: 4,
@@ -117,6 +117,7 @@ export const Projects: React.FC = () => {
       longDescription:
         "Professional car cleaning and detailing services in Artarmon, NSW",
       stats: { views: "1.8K", users: "420", rating: "4.9" },
+      image: SPCImg,
     },
     {
       id: 5,
@@ -132,6 +133,7 @@ export const Projects: React.FC = () => {
       longDescription:
         "An educational platform providing curated learning resources, tutorials, and academic support for students across Australia.",
       stats: { views: "1.9K", users: "600", rating: "4.7" },
+      image: ExlImg,
     },
     {
       id: 6,
@@ -146,6 +148,7 @@ export const Projects: React.FC = () => {
       demo: "https://smtaskmanager.netlify.app/",
       longDescription:
         "A smart task management platform built for students to organize assignments, lectures, and exams with real-time syncing via Firebase.",
+      image: StudyMateImg,
     },
     {
       id: 7,
@@ -160,6 +163,7 @@ export const Projects: React.FC = () => {
       demo: "https://busmatelk.netlify.app/",
       longDescription:
         "Real-time web application helping Sri Lankan commuters plan efficient bus routes and track availability",
+      image: BusMateImg,
     },
     {
       id: 8,
@@ -174,6 +178,7 @@ export const Projects: React.FC = () => {
       demo: "https://aiwritechecker.netlify.app/",
       longDescription:
         "Free and reliable AI content detection tool to verify authenticity of written text",
+      image: AIWriteCheckerImg,
     },
     {
       id: 9,
@@ -188,6 +193,7 @@ export const Projects: React.FC = () => {
       demo: "https://gardenintemplate.netlify.app/",
       longDescription:
         "A beautifully designed and responsive gardening website template for landscapers and garden service providers",
+      image: GardImg,
     },
     // Template Projects
     {
@@ -203,6 +209,7 @@ export const Projects: React.FC = () => {
       demo: "https://jobportaltest.netlify.app/",
       longDescription:
         "Advanced job portal with sophisticated UI/UX implementations and modern design patterns",
+      image: jobportal,
     },
     {
       id: 11,
@@ -217,6 +224,7 @@ export const Projects: React.FC = () => {
       demo: "https://sandaruaqua.netlify.app/",
       longDescription:
         "Advanced water purification solutions with innovative design and maintenance services",
+      image: aquaImg,
     },
     {
       id: 12,
@@ -231,6 +239,7 @@ export const Projects: React.FC = () => {
       demo: "https://lassanamomentz.netlify.app/",
       longDescription:
         "Full-Stack ongoing group project as Head Front-End Developer",
+      image: LSMImg,
     },
     {
       id: 13,
@@ -246,6 +255,7 @@ export const Projects: React.FC = () => {
       demo: "https://github.com/Werosh/Salon-Inventory-System-Uni-Assinment.git",
       longDescription:
         "Salon Inventory Management System simplifies and optimizes inventory management for salon operations.",
+      image: salonIMg,
     },
     {
       id: 14,
@@ -260,6 +270,7 @@ export const Projects: React.FC = () => {
       demo: "https://thealphawizards.netlify.app/",
       longDescription:
         "Personal portfolio platform with advanced UI/UX implementations",
+      image: AlphaIMg,
     },
     {
       id: 15,
@@ -274,6 +285,7 @@ export const Projects: React.FC = () => {
       demo: "https://hotelsentry.netlify.app/",
       longDescription:
         "Hotel booking platform offering seamless reservations and availability checking",
+      image: sentryIMg,
     },
     {
       id: 16,
@@ -288,6 +300,7 @@ export const Projects: React.FC = () => {
       demo: "https://demolibry.netlify.app/",
       longDescription:
         "Advanced library search engine with intelligent recommendations",
+      image: libryIMg,
     },
     {
       id: 17,
@@ -302,6 +315,7 @@ export const Projects: React.FC = () => {
       demo: "https://bluhbluhdev.netlify.app/",
       longDescription:
         "Collaborative portfolio platform with advanced UI/UX implementations",
+      image: bluhIMg,
     },
     {
       id: 18,
@@ -316,6 +330,7 @@ export const Projects: React.FC = () => {
       demo: "https://hebalhaven.netlify.app/",
       longDescription:
         "Premium herbal products and remedies designed to enhance well-being",
+      image: herbIMg,
     },
   ];
 
@@ -427,6 +442,24 @@ export const Projects: React.FC = () => {
           onClick={() => handleProjectClick(project.id)}
         >
           <div className="bg-[var(--panel)] border border-[var(--border)] rounded-lg overflow-hidden h-full flex flex-col hover:border-[var(--primary)]/50 transition-all duration-300 group">
+            {/* Project Image */}
+            {project.image && (
+              <div className="relative w-full h-32 sm:h-40 overflow-hidden bg-[var(--bg)]">
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  loading="lazy"
+                  onError={(e) => {
+                    // Hide image if it fails to load
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = "none";
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              </div>
+            )}
+
             {/* Window Header */}
             <div className="bg-[var(--bg)] border-b border-[var(--border)] px-2 sm:px-3 py-2 flex items-center justify-between">
               <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
@@ -520,6 +553,23 @@ export const Projects: React.FC = () => {
           originRect={getWindowOrigin(windowId)}
         >
           <div className="space-y-4 sm:space-y-6">
+            {/* Project Image */}
+            {project.image && (
+              <div className="relative w-full h-48 sm:h-64 lg:h-80 rounded-lg overflow-hidden bg-[var(--bg)] border border-[var(--border)]">
+                <img
+                  src={project.image}
+                  alt={project.title}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  onError={(e) => {
+                    // Hide image if it fails to load
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = "none";
+                  }}
+                />
+              </div>
+            )}
+
             {/* Project Header */}
             <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 pb-3 sm:pb-4 border-b border-[var(--border)]">
               <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-[var(--primary)]/10 border border-[var(--primary)]/30 flex items-center justify-center flex-shrink-0">
