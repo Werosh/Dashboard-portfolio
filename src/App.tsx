@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "./context/ThemeContext";
 import { SidebarProvider } from "./context/SidebarContext";
+import { WindowProvider } from "./context/WindowContext";
 import { DashboardLayout } from "./layouts/DashboardLayout";
 import { Home } from "./pages/Home";
 import { Projects } from "./pages/Projects";
@@ -32,9 +33,11 @@ const App = () => {
   return (
     <ThemeProvider>
       <SidebarProvider>
-        <BrowserRouter>
-          <AnimatedRoutes />
-        </BrowserRouter>
+        <WindowProvider>
+          <BrowserRouter>
+            <AnimatedRoutes />
+          </BrowserRouter>
+        </WindowProvider>
       </SidebarProvider>
     </ThemeProvider>
   );
