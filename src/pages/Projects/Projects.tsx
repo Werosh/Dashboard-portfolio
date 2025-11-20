@@ -14,16 +14,12 @@ import {
   Grid3x3,
   List,
   Search,
-  Calendar,
-  Tag,
   Users,
   LayoutTemplate,
 } from "lucide-react";
 import { PageTransition } from "../../components/PageTransition";
-import { WindowModal } from "../../components/WindowModal";
-import { useWindow } from "../../context/WindowContext";
 import { staggerContainer, staggerItem } from "../../utils/motionPresets";
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 // Project Images - Using public folder paths
 const YummyImg = "/images/projects/yummy.webp";
@@ -51,9 +47,6 @@ export const Projects: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<
     "all" | "CLIENT PROJECT" | "TEMPLATE PROJECT"
   >("all");
-  const { openWindow, closeWindow, isWindowOpen, getWindowOrigin } =
-    useWindow();
-  const projectRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
 
   const projects = [
     // Client Projects
@@ -374,14 +367,6 @@ export const Projects: React.FC = () => {
     }
   };
 
-  const handleProjectClick = (projectId: number) => {
-    const ref = projectRefs.current[`project-${projectId}`];
-    // Always open modal in center on mobile, use origin on desktop
-    const isMobile = window.innerWidth < 768;
-    const rect = isMobile ? null : ref?.getBoundingClientRect() || null;
-    openWindow(`project-${projectId}`, rect);
-  };
-
   const Window: React.FC<{
     title: string;
     children: React.ReactNode;
@@ -425,244 +410,114 @@ export const Projects: React.FC = () => {
     project: (typeof projects)[0];
     index: number;
   }> = ({ project, index }) => {
-    const windowId = `project-${project.id}`;
-    const isOpen = isWindowOpen(windowId);
-
     return (
-      <>
-        <motion.div
-          ref={(el) => {
-            projectRefs.current[windowId] = el;
-          }}
-          variants={staggerItem}
-          className="h-full cursor-pointer"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: index * 0.1 }}
-          onClick={() => handleProjectClick(project.id)}
-        >
-          <div className="bg-[var(--panel)] border border-[var(--border)] rounded-lg overflow-hidden h-full flex flex-col hover:border-[var(--primary)]/50 transition-all duration-300 group">
-            {/* Project Image */}
-            {project.image && (
-              <div className="relative w-full h-32 sm:h-40 overflow-hidden bg-[var(--bg)]">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  loading="lazy"
-                  onError={(e) => {
-                    // Hide image if it fails to load
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = "none";
-                  }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </div>
-            )}
-
-            {/* Window Header */}
-            <div className="bg-[var(--bg)] border-b border-[var(--border)] px-2 sm:px-3 py-2 flex items-center justify-between">
-              <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
-                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[var(--primary)] flex-shrink-0" />
-                <span className="text-xs font-medium text-[var(--text)] truncate">
-                  {project.title}
-                </span>
-              </div>
-              <div
-                className={`flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded text-xs border flex-shrink-0 ${getStatusColor(
-                  project.status
-                )}`}
-              >
-                {getStatusIcon(project.status)}
-              </div>
+      <motion.a
+        href={project.demo}
+        target="_blank"
+        rel="noopener noreferrer"
+        variants={staggerItem}
+        className="h-full cursor-pointer block"
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: index * 0.1 }}
+      >
+        <div className="bg-[var(--panel)] border border-[var(--border)] rounded-lg overflow-hidden h-full flex flex-col hover:border-[var(--primary)]/50 transition-all duration-300 group">
+          {/* Project Image */}
+          {project.image && (
+            <div className="relative w-full h-32 sm:h-40 overflow-hidden bg-[var(--bg)]">
+              <img
+                src={project.image}
+                alt={project.title}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                loading="lazy"
+                onError={(e) => {
+                  // Hide image if it fails to load
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = "none";
+                }}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
+          )}
 
-            {/* Window Content */}
-            <div className="p-3 sm:p-4 flex-1 flex flex-col">
-              <div className="flex items-start gap-2 sm:gap-3 mb-2 sm:mb-3">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-[var(--primary)]/10 border border-[var(--primary)]/30 flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--primary)]/20 transition-colors">
-                  <FileCode className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--primary)]" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-base sm:text-lg font-semibold text-[var(--text)] mb-1 truncate">
-                    {project.title}
-                  </h3>
-                  <p className="text-xs text-[var(--text)]/50 mb-2 truncate">
-                    {project.category}
-                  </p>
-                </div>
-              </div>
-
-              <p className="text-xs sm:text-sm text-[var(--text)]/70 mb-3 sm:mb-4 line-clamp-3 flex-1">
-                {project.description}
-              </p>
-
-              <div className="flex flex-wrap gap-1 sm:gap-1.5 mb-3 sm:mb-4">
-                {project.tech.slice(0, 3).map((tech, techIndex) => (
-                  <span
-                    key={techIndex}
-                    className="px-1.5 sm:px-2 py-0.5 text-xs rounded bg-[var(--bg)] border border-[var(--border)] text-[var(--text)]/70"
-                  >
-                    {tech}
-                  </span>
-                ))}
-                {project.tech.length > 3 && (
-                  <span className="px-1.5 sm:px-2 py-0.5 text-xs rounded bg-[var(--bg)] border border-[var(--border)] text-[var(--text)]/70">
-                    +{project.tech.length - 3}
-                  </span>
-                )}
-              </div>
-
-              <div className="flex items-center gap-1.5 sm:gap-2 mt-auto pt-2 sm:pt-3 border-t border-[var(--border)]">
-                <motion.button
-                  className="flex-1 flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 sm:py-2 rounded text-xs font-medium bg-[var(--primary)]/10 border border-[var(--primary)]/30 text-[var(--primary)] hover:bg-[var(--primary)]/20 transition-colors"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleProjectClick(project.id);
-                  }}
-                >
-                  <ExternalLink className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                  <span className="hidden sm:inline">Open</span>
-                </motion.button>
-                <motion.a
-                  href={project.github}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-1.5 sm:p-2 rounded border border-[var(--border)] text-[var(--text)]/70 hover:border-[var(--primary)]/50 hover:text-[var(--primary)] transition-colors"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={(e) => e.stopPropagation()}
-                  aria-label="View on GitHub"
-                >
-                  <Github className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                </motion.a>
-              </div>
+          {/* Window Header */}
+          <div className="bg-[var(--bg)] border-b border-[var(--border)] px-2 sm:px-3 py-2 flex items-center justify-between">
+            <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1">
+              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-[var(--primary)] flex-shrink-0" />
+              <span className="text-xs font-medium text-[var(--text)] truncate">
+                {project.title}
+              </span>
+            </div>
+            <div
+              className={`flex items-center gap-1 px-1.5 sm:px-2 py-0.5 rounded text-xs border flex-shrink-0 ${getStatusColor(
+                project.status
+              )}`}
+            >
+              {getStatusIcon(project.status)}
             </div>
           </div>
-        </motion.div>
 
-        {/* Modal Window */}
-        <WindowModal
-          isOpen={isOpen}
-          onClose={() => closeWindow(windowId)}
-          title={project.title}
-          icon={<FileCode className="w-4 h-4" />}
-          windowId={windowId}
-          originRect={getWindowOrigin(windowId)}
-        >
-          <div className="space-y-4 sm:space-y-6">
-            {/* Project Image */}
-            {project.image && (
-              <div className="relative w-full h-48 sm:h-64 lg:h-80 rounded-lg overflow-hidden bg-[var(--bg)] border border-[var(--border)]">
-                <img
-                  src={project.image}
-                  alt={project.title}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  onError={(e) => {
-                    // Hide image if it fails to load
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = "none";
-                  }}
-                />
-              </div>
-            )}
-
-            {/* Project Header */}
-            <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 pb-3 sm:pb-4 border-b border-[var(--border)]">
-              <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg bg-[var(--primary)]/10 border border-[var(--primary)]/30 flex items-center justify-center flex-shrink-0">
-                <FileCode className="w-6 h-6 sm:w-8 sm:h-8 text-[var(--primary)]" />
+          {/* Window Content */}
+          <div className="p-3 sm:p-4 flex-1 flex flex-col">
+            <div className="flex items-start gap-2 sm:gap-3 mb-2 sm:mb-3">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-[var(--primary)]/10 border border-[var(--primary)]/30 flex items-center justify-center flex-shrink-0 group-hover:bg-[var(--primary)]/20 transition-colors">
+                <FileCode className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--primary)]" />
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
-                  <h2 className="text-xl sm:text-2xl font-bold text-[var(--text)] truncate">
-                    {project.title}
-                  </h2>
-                  <div
-                    className={`flex items-center gap-1 px-2 sm:px-3 py-1 rounded-md text-xs sm:text-sm border flex-shrink-0 ${getStatusColor(
-                      project.status
-                    )}`}
-                  >
-                    {getStatusIcon(project.status)}
-                    <span>{project.status}</span>
-                  </div>
-                </div>
-                <p className="text-xs sm:text-sm text-[var(--text)]/70 mb-2 sm:mb-3">
+                <h3 className="text-base sm:text-lg font-semibold text-[var(--text)] mb-1 truncate">
+                  {project.title}
+                </h3>
+                <p className="text-xs text-[var(--text)]/50 mb-2 truncate">
                   {project.category}
                 </p>
-                <div className="flex items-center gap-3 sm:gap-4 text-xs text-[var(--text)]/60">
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="w-3 h-3 sm:w-4 sm:h-4" />
-                    <span>
-                      {new Date(project.date).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </span>
-                  </div>
-                </div>
               </div>
             </div>
 
-            {/* Description */}
-            <div>
-              <h3 className="text-base sm:text-lg font-semibold text-[var(--text)] mb-2 sm:mb-3">
-                Description
-              </h3>
-              <p className="text-sm sm:text-base text-[var(--text)]/80 leading-relaxed">
-                {project.longDescription || project.description}
-              </p>
+            <p className="text-xs sm:text-sm text-[var(--text)]/70 mb-3 sm:mb-4 line-clamp-3 flex-1">
+              {project.description}
+            </p>
+
+            <div className="flex flex-wrap gap-1 sm:gap-1.5 mb-3 sm:mb-4">
+              {project.tech.slice(0, 3).map((tech, techIndex) => (
+                <span
+                  key={techIndex}
+                  className="px-1.5 sm:px-2 py-0.5 text-xs rounded bg-[var(--bg)] border border-[var(--border)] text-[var(--text)]/70"
+                >
+                  {tech}
+                </span>
+              ))}
+              {project.tech.length > 3 && (
+                <span className="px-1.5 sm:px-2 py-0.5 text-xs rounded bg-[var(--bg)] border border-[var(--border)] text-[var(--text)]/70">
+                  +{project.tech.length - 3}
+                </span>
+              )}
             </div>
 
-            {/* Tech Stack */}
-            <div>
-              <h3 className="text-base sm:text-lg font-semibold text-[var(--text)] mb-2 sm:mb-3 flex items-center gap-2">
-                <Tag className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--primary)]" />
-                Technology Stack
-              </h3>
-              <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                {project.tech.map((tech, techIndex) => (
-                  <span
-                    key={techIndex}
-                    className="px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-medium rounded-lg bg-[var(--bg)] border border-[var(--border)] text-[var(--text)] hover:border-[var(--primary)]/50 hover:text-[var(--primary)] transition-colors"
-                  >
-                    {tech}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            {/* Actions */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 pt-3 sm:pt-4 border-t border-[var(--border)]">
-              <motion.a
-                href={project.demo}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg bg-[var(--primary)] text-white text-sm sm:text-base font-medium hover:bg-[var(--hover)] transition-colors"
+            <div className="flex items-center gap-1.5 sm:gap-2 mt-auto pt-2 sm:pt-3 border-t border-[var(--border)]">
+              <motion.div
+                className="flex-1 flex items-center justify-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 sm:py-2 rounded text-xs font-medium bg-[var(--primary)]/10 border border-[var(--primary)]/30 text-[var(--primary)] hover:bg-[var(--primary)]/20 transition-colors"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <ExternalLink className="w-4 h-4" />
-                View Demo
-              </motion.a>
+                <ExternalLink className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                <span className="hidden sm:inline">Visit Site</span>
+              </motion.div>
               <motion.a
                 href={project.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-lg bg-[var(--panel)] border border-[var(--border)] text-[var(--text)] text-sm sm:text-base font-medium hover:border-[var(--primary)] transition-colors"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+                className="p-1.5 sm:p-2 rounded border border-[var(--border)] text-[var(--text)]/70 hover:border-[var(--primary)]/50 hover:text-[var(--primary)] transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={(e) => e.stopPropagation()}
+                aria-label="View on GitHub"
               >
-                <Github className="w-4 h-4" />
-                View Code
+                <Github className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
               </motion.a>
             </div>
           </div>
-        </WindowModal>
-      </>
+        </div>
+      </motion.a>
     );
   };
 

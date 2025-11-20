@@ -36,57 +36,25 @@ export const WindowModal: React.FC<WindowModalProps> = ({
     };
   }, [isOpen]);
 
-  // Calculate center position for the modal
-  const getCenterPosition = () => {
-    if (typeof window === 'undefined') return { x: 0, y: 0 };
-    return {
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2,
-    };
+  // Always center the modal - ignore originRect for consistent centering
+  // This ensures the modal always opens in the middle of the screen
+  const initialTransform = {
+    scale: 0.8,
+    opacity: 0,
   };
-
-  // Calculate origin position
-  const getOriginPosition = () => {
-    if (!originRect) return { x: 0, y: 0 };
-    return {
-      x: originRect.left + originRect.width / 2,
-      y: originRect.top + originRect.height / 2,
-    };
-  };
-
-  const centerPos = getCenterPosition();
-  const originPos = getOriginPosition();
-
-  // Use transform origin for animation
-  const initialTransform = originRect
-    ? {
-        scale: 0.3,
-        opacity: 0,
-      }
-    : {
-        scale: 0.8,
-        opacity: 0,
-      };
 
   const centerTransform = {
     scale: 1,
     opacity: 1,
   };
 
-  const exitTransform = originRect
-    ? {
-        scale: 0.3,
-        opacity: 0,
-      }
-    : {
-        scale: 0.8,
-        opacity: 0,
-      };
+  const exitTransform = {
+    scale: 0.8,
+    opacity: 0,
+  };
 
-  // Calculate transform origin for smooth animation
-  const transformOrigin = originRect
-    ? `${originPos.x}px ${originPos.y}px`
-    : `${centerPos.x}px ${centerPos.y}px`;
+  // Always use center for transform origin to ensure centered animation
+  const transformOrigin = 'center center';
 
   return (
     <AnimatePresence mode="wait">
@@ -115,18 +83,19 @@ export const WindowModal: React.FC<WindowModalProps> = ({
               stiffness: 300,
               duration: 0.4,
             }}
-            className={`fixed z-50 w-[95vw] sm:w-full max-w-4xl max-h-[90vh] sm:max-h-[80vh] mx-2 sm:mx-0 ${className}`}
+            className={`fixed z-50 w-[95vw] sm:w-[90vw] md:w-full max-w-4xl max-h-[95vh] sm:max-h-[90vh] md:max-h-[85vh] ${className}`}
             style={{
               left: '50%',
               top: '50%',
               transform: 'translate(-50%, -50%)',
               transformOrigin: transformOrigin,
+              margin: 0,
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-[var(--panel)] border border-[var(--border)] rounded-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh] sm:max-h-[80vh]">
+            <div className="bg-[var(--panel)] border border-[var(--border)] rounded-lg shadow-2xl overflow-hidden flex flex-col max-h-[95vh] sm:max-h-[90vh] md:max-h-[85vh]">
               {/* Window Title Bar */}
-              <div className="bg-[var(--bg)] border-b border-[var(--border)] px-3 sm:px-4 py-2 sm:py-3 flex items-center justify-between select-none">
+              <div className="bg-[var(--bg)] border-b border-[var(--border)] px-3 sm:px-4 py-2 sm:py-3 flex items-center justify-between select-none flex-shrink-0">
                 <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                   {/* Traffic Light Buttons */}
                   <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
@@ -171,7 +140,7 @@ export const WindowModal: React.FC<WindowModalProps> = ({
               </div>
 
               {/* Window Content */}
-              <div className="overflow-y-auto flex-1 scrollbar-custom p-3 sm:p-4 lg:p-6">
+              <div className="overflow-y-auto flex-1 scrollbar-custom p-3 sm:p-4 md:p-6 min-h-0">
                 {children}
               </div>
             </div>
