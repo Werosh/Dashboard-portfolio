@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "./context/ThemeContext";
+import { SidebarProvider } from "./context/SidebarContext";
 import { DashboardLayout } from "./layouts/DashboardLayout";
 import { Home } from "./pages/Home";
 import { Projects } from "./pages/Projects";
@@ -28,9 +29,11 @@ const AnimatedRoutes = () => {
 const App = () => {
   return (
     <ThemeProvider>
-      <BrowserRouter>
-        <AnimatedRoutes />
-      </BrowserRouter>
+      <SidebarProvider>
+        <BrowserRouter>
+          <AnimatedRoutes />
+        </BrowserRouter>
+      </SidebarProvider>
     </ThemeProvider>
   );
 };

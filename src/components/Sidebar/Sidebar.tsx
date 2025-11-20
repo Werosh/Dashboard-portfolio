@@ -1,5 +1,5 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { NavLink } from 'react-router-dom';
+import { motion, AnimatePresence } from "framer-motion";
+import { NavLink } from "react-router-dom";
 import {
   Home,
   FolderKanban,
@@ -7,9 +7,8 @@ import {
   Mail,
   ChevronLeft,
   ChevronRight,
-} from 'lucide-react';
-import { useSidebar } from '../../hooks/useSidebar';
-import { useTheme } from '../../hooks/useTheme';
+} from "lucide-react";
+import { useSidebar } from "../../hooks/useSidebar";
 
 interface NavItem {
   path: string;
@@ -18,23 +17,23 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { path: '/', label: 'Home', icon: Home },
-  { path: '/projects', label: 'Projects', icon: FolderKanban },
-  { path: '/about', label: 'About', icon: User },
-  { path: '/contact', label: 'Contact', icon: Mail },
+  { path: "/", label: "Home", icon: Home },
+  { path: "/projects", label: "Projects", icon: FolderKanban },
+  { path: "/about", label: "About", icon: User },
+  { path: "/contact", label: "Contact", icon: Mail },
 ];
 
 export const Sidebar: React.FC = () => {
-  const { isOpen, isMobile, isTablet, toggle, close } = useSidebar();
+  const { isOpen, isMobile, toggle, close } = useSidebar();
 
   const sidebarVariants = {
     open: {
-      width: isMobile ? '280px' : '260px',
-      transition: { duration: 0.3, ease: 'easeInOut' },
+      width: isMobile ? "280px" : "260px",
+      transition: { duration: 0.3, ease: "easeInOut" },
     },
     closed: {
-      width: isMobile ? 0 : '80px',
-      transition: { duration: 0.3, ease: 'easeInOut' },
+      width: isMobile ? 0 : "80px",
+      transition: { duration: 0.3, ease: "easeInOut" },
     },
   };
 
@@ -50,35 +49,36 @@ export const Sidebar: React.FC = () => {
           {isOpen && (
             <>
               <motion.div
-                className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+                className="fixed inset-0 bg-black/40 z-40 lg:hidden"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 onClick={close}
               />
               <motion.aside
-                className="fixed left-0 top-0 bottom-0 z-50 bg-[var(--panel)] border-r border-[var(--border)] overflow-hidden"
+                className="fixed left-0 top-0 bottom-0 z-[60] bg-[var(--panel)] border-r border-[var(--border)] w-[280px] pointer-events-auto"
                 initial={{ x: -280 }}
                 animate={{ x: 0 }}
                 exit={{ x: -280 }}
-                transition={{ duration: 0.3, ease: 'easeInOut' }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                onClick={(e) => e.stopPropagation()}
               >
-                <div className="h-full flex flex-col pt-20 overflow-hidden">
-                  <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto scrollbar-hide min-h-0">
+                <div className="h-full flex flex-col pt-20">
+                  <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto scrollbar-hide">
                     {navItems.map((item) => (
                       <NavLink
                         key={item.path}
                         to={item.path}
                         onClick={close}
                         className={({ isActive }) =>
-                          `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors hover-grow ${
+                          `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors hover-grow cursor-pointer ${
                             isActive
-                              ? 'bg-[var(--primary)]/20 text-[var(--primary)] border border-[var(--primary)]'
-                              : 'text-[var(--text)] hover:bg-[var(--panel)] hover:text-[var(--primary)]'
+                              ? "bg-[var(--primary)]/20 text-[var(--primary)] border border-[var(--primary)]"
+                              : "text-[var(--text)] hover:bg-[var(--panel)] hover:text-[var(--primary)]"
                           }`
                         }
                       >
-                        <item.icon className="w-5 h-5" />
+                        <item.icon className="w-5 h-5 flex-shrink-0" />
                         <span className="font-medium">{item.label}</span>
                       </NavLink>
                     ))}
@@ -96,7 +96,7 @@ export const Sidebar: React.FC = () => {
     <motion.aside
       className="fixed left-0 top-16 bottom-0 bg-[var(--panel)] border-r border-[var(--border)] z-40 overflow-hidden"
       variants={sidebarVariants}
-      animate={isOpen ? 'open' : 'closed'}
+      animate={isOpen ? "open" : "closed"}
       initial={false}
     >
       <div className="h-full flex flex-col overflow-hidden">
@@ -124,8 +124,8 @@ export const Sidebar: React.FC = () => {
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors hover-grow relative ${
                   isActive
-                    ? 'bg-[var(--primary)]/20 text-[var(--primary)] border border-[var(--primary)]'
-                    : 'text-[var(--text)] hover:bg-[var(--panel)] hover:text-[var(--primary)]'
+                    ? "bg-[var(--primary)]/20 text-[var(--primary)] border border-[var(--primary)]"
+                    : "text-[var(--text)] hover:bg-[var(--panel)] hover:text-[var(--primary)]"
                 }`
               }
             >
@@ -160,4 +160,3 @@ export const Sidebar: React.FC = () => {
     </motion.aside>
   );
 };
-
