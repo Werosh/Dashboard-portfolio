@@ -115,7 +115,7 @@ export const WindowModal: React.FC<WindowModalProps> = ({
               stiffness: 300,
               duration: 0.4,
             }}
-            className={`fixed z-50 w-full max-w-4xl max-h-[80vh] ${className}`}
+            className={`fixed z-50 w-[95vw] sm:w-full max-w-4xl max-h-[90vh] sm:max-h-[80vh] mx-2 sm:mx-0 ${className}`}
             style={{
               left: '50%',
               top: '50%',
@@ -124,18 +124,19 @@ export const WindowModal: React.FC<WindowModalProps> = ({
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="bg-[var(--panel)] border border-[var(--border)] rounded-lg shadow-2xl overflow-hidden flex flex-col max-h-[80vh]">
+            <div className="bg-[var(--panel)] border border-[var(--border)] rounded-lg shadow-2xl overflow-hidden flex flex-col max-h-[90vh] sm:max-h-[80vh]">
               {/* Window Title Bar */}
-              <div className="bg-[var(--bg)] border-b border-[var(--border)] px-4 py-3 flex items-center justify-between select-none">
-                <div className="flex items-center gap-3">
+              <div className="bg-[var(--bg)] border-b border-[var(--border)] px-3 sm:px-4 py-2 sm:py-3 flex items-center justify-between select-none">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                   {/* Traffic Light Buttons */}
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
                     <motion.button
                       onClick={onClose}
                       className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 transition-colors cursor-pointer flex items-center justify-center group"
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       title="Close"
+                      aria-label="Close"
                     >
                       <X className="w-2 h-2 text-transparent group-hover:text-white transition-colors" />
                     </motion.button>
@@ -144,6 +145,7 @@ export const WindowModal: React.FC<WindowModalProps> = ({
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       title="Minimize"
+                      aria-label="Minimize"
                     >
                       <Minus className="w-2 h-2 text-transparent group-hover:text-[var(--text)] transition-colors" />
                     </motion.button>
@@ -152,15 +154,16 @@ export const WindowModal: React.FC<WindowModalProps> = ({
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       title="Maximize"
+                      aria-label="Maximize"
                     >
                       <Maximize2 className="w-2 h-2 text-transparent group-hover:text-white transition-colors" />
                     </motion.button>
                   </div>
 
                   {/* Window Title */}
-                  <div className="flex items-center gap-2 ml-2">
-                    {icon && <div className="text-[var(--primary)]">{icon}</div>}
-                    <span className="text-sm font-medium text-[var(--text)] truncate max-w-[300px]">
+                  <div className="flex items-center gap-1.5 sm:gap-2 ml-1 sm:ml-2 min-w-0">
+                    {icon && <div className="text-[var(--primary)] flex-shrink-0">{icon}</div>}
+                    <span className="text-xs sm:text-sm font-medium text-[var(--text)] truncate">
                       {title}
                     </span>
                   </div>
@@ -168,7 +171,7 @@ export const WindowModal: React.FC<WindowModalProps> = ({
               </div>
 
               {/* Window Content */}
-              <div className="overflow-y-auto flex-1 scrollbar-custom p-6">
+              <div className="overflow-y-auto flex-1 scrollbar-custom p-3 sm:p-4 lg:p-6">
                 {children}
               </div>
             </div>
