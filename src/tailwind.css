@@ -1,0 +1,304 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Escargoth";
+  src: url("/font/Escargoth.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  /* Dark Mode Colors */
+  --color-bg-dark: #000000;
+  --color-panel-dark: #222222;
+  --color-primary-dark: #1dcd9f;
+  --color-secondary-dark: #169976;
+
+  /* Light Mode Colors */
+  --color-bg-light: #ffffff;
+  --color-panel-light: #fafafa;
+  --color-primary-light: #169976;
+  --color-hover-light: #1dcd9f;
+  --color-border-light: #222222;
+
+  /* CSS Variables for Theme Switching */
+  --bg: var(--color-bg-light);
+  --panel: var(--color-panel-light);
+  --primary: var(--color-primary-light);
+  --hover: var(--color-hover-light);
+  --border: var(--color-border-light);
+  --text: var(--color-border-light);
+}
+
+[data-theme="dark"] {
+  --bg: var(--color-bg-dark);
+  --panel: var(--color-panel-dark);
+  --primary: var(--color-primary-dark);
+  --hover: var(--color-secondary-dark);
+  --border: rgba(255, 255, 255, 0.1);
+  --text: #ffffff;
+}
+
+@layer base {
+  * {
+    @apply m-0 p-0 box-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply antialiased overflow-x-hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+      "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+      "Helvetica Neue", sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Custom Scrollbar for body */
+  body::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  body::-webkit-scrollbar-track {
+    background: var(--panel);
+  }
+
+  body::-webkit-scrollbar-thumb {
+    @apply rounded;
+    background: var(--primary);
+  }
+
+  body::-webkit-scrollbar-thumb:hover {
+    background: var(--hover);
+  }
+
+  #root {
+    @apply min-h-screen w-full;
+  }
+
+  h1 {
+    font-family: "Escargoth", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+      "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+      "Helvetica Neue", sans-serif;
+  }
+}
+
+/* Animated Background */
+.animated-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.animated-bg::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+      circle at 20% 50%,
+      rgba(29, 205, 159, 0.15) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(22, 153, 118, 0.15) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 20%,
+      rgba(29, 205, 159, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 60% 40%,
+      rgba(22, 153, 118, 0.08) 0%,
+      transparent 45%
+    );
+  animation: gradient-rotate 25s ease-in-out infinite;
+  filter: blur(60px);
+}
+
+[data-theme="dark"] .animated-bg::before {
+  background: radial-gradient(
+      circle at 20% 50%,
+      rgba(29, 205, 159, 0.25) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(22, 153, 118, 0.25) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 20%,
+      rgba(29, 205, 159, 0.2) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 60% 70%,
+      rgba(22, 153, 118, 0.15) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 10% 90%,
+      rgba(29, 205, 159, 0.1) 0%,
+      transparent 45%
+    );
+  filter: blur(80px);
+}
+
+[data-theme="light"] .animated-bg::before {
+  background: radial-gradient(
+      circle at 20% 50%,
+      rgba(29, 205, 159, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 80%,
+      rgba(22, 153, 118, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 20%,
+      rgba(29, 205, 159, 0.06) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 60% 40%,
+      rgba(22, 153, 118, 0.05) 0%,
+      transparent 45%
+    );
+  filter: blur(50px);
+}
+
+.animated-bg::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(
+      3px 3px at 20px 30px,
+      rgba(29, 205, 159, 0.4),
+      transparent
+    ),
+    radial-gradient(2px 2px at 60px 70px, rgba(22, 153, 118, 0.4), transparent),
+    radial-gradient(2px 2px at 50px 50px, rgba(29, 205, 159, 0.3), transparent),
+    radial-gradient(1px 1px at 80px 20px, rgba(22, 153, 118, 0.3), transparent),
+    radial-gradient(3px 3px at 90px 40px, rgba(29, 205, 159, 0.35), transparent),
+    radial-gradient(2px 2px at 33px 60px, rgba(22, 153, 118, 0.35), transparent),
+    radial-gradient(2px 2px at 70px 80px, rgba(29, 205, 159, 0.3), transparent),
+    radial-gradient(
+      1px 1px at 120px 90px,
+      rgba(22, 153, 118, 0.25),
+      transparent
+    ),
+    radial-gradient(2px 2px at 150px 30px, rgba(29, 205, 159, 0.3), transparent);
+  background-size: 250px 250px;
+  background-position: 0 0, 40px 60px, 130px 30px, 70px 100px, 150px 50px,
+    20px 80px, 100px 120px, 180px 90px, 200px 30px;
+  animation: particle-float 30s ease-in-out infinite;
+  opacity: 0.7;
+  filter: blur(0.5px);
+}
+
+[data-theme="light"] .animated-bg::after {
+  opacity: 0.4;
+}
+
+@keyframes gradient-rotate {
+  0% {
+    transform: rotate(0deg) scale(1) translate(0, 0);
+  }
+  25% {
+    transform: rotate(90deg) scale(1.15) translate(5%, 5%);
+  }
+  50% {
+    transform: rotate(180deg) scale(0.95) translate(-3%, 3%);
+  }
+  75% {
+    transform: rotate(270deg) scale(1.1) translate(3%, -2%);
+  }
+  100% {
+    transform: rotate(360deg) scale(1) translate(0, 0);
+  }
+}
+
+@keyframes particle-float {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0.7;
+  }
+  25% {
+    transform: translate(30px, -30px) rotate(90deg);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translate(-20px, 20px) rotate(180deg);
+    opacity: 0.6;
+  }
+  75% {
+    transform: translate(25px, 25px) rotate(270deg);
+    opacity: 0.75;
+  }
+  100% {
+    transform: translate(0, 0) rotate(360deg);
+    opacity: 0.7;
+  }
+}
+
+/* Content overlay */
+.content-overlay {
+  position: relative;
+  z-index: 1;
+}
+
+@layer utilities {
+  /* Custom Scrollbar utility class (for use in components if needed) */
+  .scrollbar-custom::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-track {
+    background: var(--panel);
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    @apply rounded;
+    background: var(--primary);
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background: var(--hover);
+  }
+
+  /* Hide scrollbar utility */
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-cursor {
+    @apply hidden;
+  }
+}
