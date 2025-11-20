@@ -28,8 +28,6 @@ export const Home: React.FC = () => {
   const titles = [
     { text: "WEROSH KRIYANJALA", accent: true },
     { text: "SOFTWARE ENGINEER", accent: false },
-    { text: "FULL-STACK DEVELOPER", accent: true },
-    { text: "CONTENT CREATOR", accent: false },
   ];
 
   const stats = [
@@ -118,7 +116,7 @@ export const Home: React.FC = () => {
                         }`}
                       >
                         <span
-                          className={`font-bold tracking-tight ${
+                          className={`font-bold tracking-wider ${
                             titles[currentIndex].accent
                               ? "text-[var(--primary)]"
                               : "text-[var(--text)]"
@@ -138,7 +136,7 @@ export const Home: React.FC = () => {
                     <span className="text-[var(--primary)] font-semibold">
                       FULL-STACK DEVELOPER
                     </span>{" "}
-                    — blending creativity and code from Sri Lanka to the world.
+                    - blending creativity and code from Sri Lanka to the world.
                   </motion.p>
                 </motion.div>
 
