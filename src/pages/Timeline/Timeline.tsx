@@ -7,15 +7,21 @@ import {
   Building2,
   ExternalLink,
   Star,
+  Minus,
+  Maximize2,
+  X,
 } from "lucide-react";
 import { Card } from "../../components/Card";
 import { PageTransition } from "../../components/PageTransition";
 import { SectionHeader } from "../../components/SectionHeader";
+import { WindowModal } from "../../components/WindowModal";
+import { useWindow } from "../../context/WindowContext";
 import {
   staggerContainer,
   staggerItem,
   fadeIn,
 } from "../../utils/motionPresets";
+import { useRef } from "react";
 
 interface TimelineEntry {
   id: string;
@@ -296,6 +302,9 @@ const transformToTimelineData = (): TimelineEntry[] => {
 const timelineData = transformToTimelineData();
 
 export const Timeline: React.FC = () => {
+  const { openWindow, closeWindow, isWindowOpen, getWindowOrigin } = useWindow();
+  const entryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+
   // Keep entries in their original order (no sorting)
   const educationEntries = timelineData.filter((e) => e.type === "education");
   const experienceEntries = timelineData.filter((e) => e.type === "experience");
@@ -309,21 +318,71 @@ export const Timeline: React.FC = () => {
     });
   };
 
+  const handleEntryClick = (entryId: string) => {
+    const ref = entryRefs.current[entryId];
+    const rect = ref?.getBoundingClientRect() || null;
+    openWindow(entryId, rect);
+  };
+
+  const Window: React.FC<{ title: string; children: React.ReactNode; className?: string }> = ({ 
+    title, 
+    children, 
+    className = '' 
+  }) => (
+    <motion.div
+      className={`bg-[var(--panel)] border border-[var(--border)] rounded-lg shadow-lg overflow-hidden ${className}`}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      {/* Window Title Bar */}
+      <div className="bg-[var(--bg)] border-b border-[var(--border)] px-4 py-2.5 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="flex gap-1.5">
+            <div className="w-3 h-3 rounded-full bg-red-500/80 hover:bg-red-500 transition-colors cursor-pointer flex items-center justify-center">
+              <X className="w-2 h-2 text-transparent hover:text-white" />
+            </div>
+            <div className="w-3 h-3 rounded-full bg-yellow-500/80 hover:bg-yellow-500 transition-colors cursor-pointer flex items-center justify-center">
+              <Minus className="w-2 h-2 text-transparent hover:text-[var(--text)]" />
+            </div>
+            <div className="w-3 h-3 rounded-full bg-green-500/80 hover:bg-green-500 transition-colors cursor-pointer flex items-center justify-center">
+              <Maximize2 className="w-2 h-2 text-transparent hover:text-white" />
+            </div>
+          </div>
+          <div className="flex items-center gap-2 ml-2">
+            <Calendar className="w-4 h-4 text-[var(--primary)]" />
+            <span className="text-sm font-medium text-[var(--text)]">{title}</span>
+          </div>
+        </div>
+      </div>
+      
+      {/* Window Content */}
+      <div className="p-6">
+        {children}
+      </div>
+    </motion.div>
+  );
+
   return (
     <PageTransition>
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header Section */}
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
-        >
-          <SectionHeader
-            title="Timeline"
-            subtitle="Education & Experience"
-            icon={<Calendar className="w-6 h-6 text-[var(--primary)]" />}
-          />
-        </motion.div>
+        {/* Main Window Container */}
+        <Window title="Timeline - Education & Experience">
+          {/* Header Section */}
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            animate="visible"
+            className="mb-6"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <Calendar className="w-6 h-6 text-[var(--primary)]" />
+              <div>
+                <h1 className="text-2xl font-bold text-[var(--text)]">Timeline</h1>
+                <p className="text-sm text-[var(--text)]/70">Education & Experience</p>
+              </div>
+            </div>
+          </motion.div>
 
         {/* Timeline Content */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -365,110 +424,128 @@ export const Timeline: React.FC = () => {
                     />
 
                     {/* Entry Card - OS Style Window */}
-                    <Card className="hover:border-[var(--primary)]/50 transition-all group">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <h3 className="text-xl font-bold text-[var(--text)] group-hover:text-[var(--primary)] transition-colors">
-                              {entry.title}
-                            </h3>
-                            {entry.isCurrent && (
-                              <span className="px-2 py-1 bg-[var(--primary)] text-white text-xs font-bold uppercase rounded animate-pulse">
-                                Current
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-[var(--primary)] font-semibold mb-3">
-                            <Building2 className="w-4 h-4" />
-                            {entry.organization}
-                          </div>
-                          <div className="flex flex-wrap items-center gap-4 text-xs text-[var(--text)]/60 mb-3">
-                            <div className="flex items-center gap-1.5">
-                              <MapPin className="w-3.5 h-3.5" />
-                              {entry.location}
-                            </div>
-                            <div className="flex items-center gap-1.5">
-                              <Calendar className="w-3.5 h-3.5" />
-                              {formatDate(entry.startDate)} -{" "}
-                              {formatDate(entry.endDate)}
-                            </div>
-                          </div>
-                          <p className="text-sm text-[var(--text)]/80 leading-relaxed mb-3">
-                            {entry.description}
-                          </p>
-
-                          {/* Links */}
-                          {(entry.website || entry.linkedin) && (
-                            <div className="flex flex-wrap gap-3 mb-3">
-                              {entry.website && (
-                                <a
-                                  href={entry.website}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1.5 text-xs text-[var(--primary)] hover:text-[var(--hover)] font-medium underline underline-offset-4 transition-colors"
-                                >
-                                  <ExternalLink className="w-3 h-3" />
-                                  Website
-                                </a>
-                              )}
-                              {entry.linkedin && (
-                                <a
-                                  href={entry.linkedin}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="inline-flex items-center gap-1.5 text-xs text-[var(--primary)] hover:text-[var(--hover)] font-medium underline underline-offset-4 transition-colors"
-                                >
-                                  <ExternalLink className="w-3 h-3" />
-                                  LinkedIn
-                                </a>
+                    <div
+                      ref={(el) => (entryRefs.current[entry.id] = el)}
+                      onClick={() => handleEntryClick(entry.id)}
+                      className="cursor-pointer"
+                    >
+                      <Card className="hover:border-[var(--primary)]/50 transition-all group">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <h3 className="text-xl font-bold text-[var(--text)] group-hover:text-[var(--primary)] transition-colors">
+                                {entry.title}
+                              </h3>
+                              {entry.isCurrent && (
+                                <span className="px-2 py-1 bg-[var(--primary)] text-white text-xs font-bold uppercase rounded animate-pulse">
+                                  Current
+                                </span>
                               )}
                             </div>
-                          )}
-
-                          {/* Skills */}
-                          {entry.skills && entry.skills.length > 0 && (
-                            <div className="mb-3">
-                              <h4 className="text-xs font-semibold text-[var(--text)]/70 mb-2 uppercase tracking-wider">
-                                Skills
-                              </h4>
-                              <div className="flex flex-wrap gap-2">
-                                {entry.skills.map((skill, idx) => (
-                                  <span
-                                    key={idx}
-                                    className="px-2 py-1 text-xs font-medium bg-[var(--bg)] border border-[var(--border)] rounded text-[var(--text)]/80"
-                                  >
-                                    {skill}
-                                  </span>
-                                ))}
+                            <div className="flex items-center gap-2 text-sm text-[var(--primary)] font-semibold mb-3">
+                              <Building2 className="w-4 h-4" />
+                              {entry.organization}
+                            </div>
+                            <div className="flex flex-wrap items-center gap-4 text-xs text-[var(--text)]/60 mb-3">
+                              <div className="flex items-center gap-1.5">
+                                <MapPin className="w-3.5 h-3.5" />
+                                {entry.location}
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                <Calendar className="w-3.5 h-3.5" />
+                                {formatDate(entry.startDate)} -{" "}
+                                {formatDate(entry.endDate)}
                               </div>
                             </div>
-                          )}
+                            <p className="text-sm text-[var(--text)]/80 leading-relaxed mb-3 line-clamp-3">
+                              {entry.description}
+                            </p>
 
-                          {/* Achievements */}
-                          {entry.achievements &&
-                            entry.achievements.length > 0 && (
-                              <div>
+                            {/* Links */}
+                            {(entry.website || entry.linkedin) && (
+                              <div className="flex flex-wrap gap-3 mb-3">
+                                {entry.website && (
+                                  <a
+                                    href={entry.website}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1.5 text-xs text-[var(--primary)] hover:text-[var(--hover)] font-medium underline underline-offset-4 transition-colors"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <ExternalLink className="w-3 h-3" />
+                                    Website
+                                  </a>
+                                )}
+                                {entry.linkedin && (
+                                  <a
+                                    href={entry.linkedin}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="inline-flex items-center gap-1.5 text-xs text-[var(--primary)] hover:text-[var(--hover)] font-medium underline underline-offset-4 transition-colors"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <ExternalLink className="w-3 h-3" />
+                                    LinkedIn
+                                  </a>
+                                )}
+                              </div>
+                            )}
+
+                            {/* Skills */}
+                            {entry.skills && entry.skills.length > 0 && (
+                              <div className="mb-3">
                                 <h4 className="text-xs font-semibold text-[var(--text)]/70 mb-2 uppercase tracking-wider">
-                                  Achievements
+                                  Skills
                                 </h4>
-                                <div className="space-y-1">
-                                  {entry.achievements.map(
-                                    (achievement, idx) => (
-                                      <div
-                                        key={idx}
-                                        className="flex items-start gap-2 text-xs text-[var(--text)]/70"
-                                      >
-                                        <Star className="w-3 h-3 text-[var(--primary)] mt-0.5 flex-shrink-0" />
-                                        <span>{achievement}</span>
-                                      </div>
-                                    )
+                                <div className="flex flex-wrap gap-2">
+                                  {entry.skills.slice(0, 3).map((skill, idx) => (
+                                    <span
+                                      key={idx}
+                                      className="px-2 py-1 text-xs font-medium bg-[var(--bg)] border border-[var(--border)] rounded text-[var(--text)]/80"
+                                    >
+                                      {skill}
+                                    </span>
+                                  ))}
+                                  {entry.skills.length > 3 && (
+                                    <span className="px-2 py-1 text-xs font-medium bg-[var(--bg)] border border-[var(--border)] rounded text-[var(--text)]/80">
+                                      +{entry.skills.length - 3}
+                                    </span>
                                   )}
                                 </div>
                               </div>
                             )}
+
+                            {/* Achievements */}
+                            {entry.achievements &&
+                              entry.achievements.length > 0 && (
+                                <div>
+                                  <h4 className="text-xs font-semibold text-[var(--text)]/70 mb-2 uppercase tracking-wider">
+                                    Achievements
+                                  </h4>
+                                  <div className="space-y-1">
+                                    {entry.achievements.slice(0, 2).map(
+                                      (achievement, idx) => (
+                                        <div
+                                          key={idx}
+                                          className="flex items-start gap-2 text-xs text-[var(--text)]/70"
+                                        >
+                                          <Star className="w-3 h-3 text-[var(--primary)] mt-0.5 flex-shrink-0" />
+                                          <span>{achievement}</span>
+                                        </div>
+                                      )
+                                    )}
+                                    {entry.achievements.length > 2 && (
+                                      <div className="text-xs text-[var(--text)]/50 italic">
+                                        +{entry.achievements.length - 2} more
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
+                          </div>
                         </div>
-                      </div>
-                    </Card>
+                      </Card>
+                    </div>
                   </motion.div>
                 ))}
                 {experienceEntries.length === 0 && (
@@ -519,39 +596,44 @@ export const Timeline: React.FC = () => {
                     />
 
                     {/* Entry Card - OS Style Window */}
-                    <Card className="hover:border-[var(--primary)]/50 transition-all group">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <h3 className="text-xl font-bold text-[var(--text)] group-hover:text-[var(--primary)] transition-colors">
-                              {entry.title}
-                            </h3>
-                            {entry.isCurrent && (
-                              <span className="px-2 py-1 bg-[var(--primary)] text-white text-xs font-bold uppercase rounded animate-pulse">
-                                Current
-                              </span>
-                            )}
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-[var(--primary)] font-semibold mb-3">
-                            <Building2 className="w-4 h-4" />
-                            {entry.organization}
-                          </div>
-                          <div className="flex flex-wrap items-center gap-4 text-xs text-[var(--text)]/60 mb-3">
-                            <div className="flex items-center gap-1.5">
-                              <MapPin className="w-3.5 h-3.5" />
-                              {entry.location}
+                    <div
+                      ref={(el) => (entryRefs.current[entry.id] = el)}
+                      onClick={() => handleEntryClick(entry.id)}
+                      className="cursor-pointer"
+                    >
+                      <Card className="hover:border-[var(--primary)]/50 transition-all group">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <h3 className="text-xl font-bold text-[var(--text)] group-hover:text-[var(--primary)] transition-colors">
+                                {entry.title}
+                              </h3>
+                              {entry.isCurrent && (
+                                <span className="px-2 py-1 bg-[var(--primary)] text-white text-xs font-bold uppercase rounded animate-pulse">
+                                  Current
+                                </span>
+                              )}
                             </div>
-                            <div className="flex items-center gap-1.5">
-                              <Calendar className="w-3.5 h-3.5" />
-                              {formatDate(entry.startDate)} -{" "}
-                              {formatDate(entry.endDate)}
+                            <div className="flex items-center gap-2 text-sm text-[var(--primary)] font-semibold mb-3">
+                              <Building2 className="w-4 h-4" />
+                              {entry.organization}
                             </div>
-                          </div>
-                          <p className="text-sm text-[var(--text)]/80 leading-relaxed mb-3">
-                            {entry.description}
-                          </p>
+                            <div className="flex flex-wrap items-center gap-4 text-xs text-[var(--text)]/60 mb-3">
+                              <div className="flex items-center gap-1.5">
+                                <MapPin className="w-3.5 h-3.5" />
+                                {entry.location}
+                              </div>
+                              <div className="flex items-center gap-1.5">
+                                <Calendar className="w-3.5 h-3.5" />
+                                {formatDate(entry.startDate)} -{" "}
+                                {formatDate(entry.endDate)}
+                              </div>
+                            </div>
+                            <p className="text-sm text-[var(--text)]/80 leading-relaxed mb-3 line-clamp-3">
+                              {entry.description}
+                            </p>
 
-                          {/* Skills */}
+                            {/* Skills */}
                           {entry.skills && entry.skills.length > 0 && (
                             <div className="mb-3">
                               <h4 className="text-xs font-semibold text-[var(--text)]/70 mb-2 uppercase tracking-wider">
@@ -592,9 +674,10 @@ export const Timeline: React.FC = () => {
                                 </div>
                               </div>
                             )}
+                          </div>
                         </div>
-                      </div>
-                    </Card>
+                      </Card>
+                    </div>
                   </motion.div>
                 ))}
                 {educationEntries.length === 0 && (
@@ -607,6 +690,106 @@ export const Timeline: React.FC = () => {
             </div>
           </motion.div>
         </div>
+        </Window>
+
+        {/* Timeline Entry Modals */}
+        {timelineData.map((entry) => {
+          const isOpen = isWindowOpen(entry.id);
+          const Icon = entry.type === "education" ? GraduationCap : Briefcase;
+
+          return (
+            <WindowModal
+              key={entry.id}
+              isOpen={isOpen}
+              onClose={() => closeWindow(entry.id)}
+              title={entry.title}
+              icon={<Icon className="w-4 h-4" />}
+              windowId={entry.id}
+              originRect={getWindowOrigin(entry.id)}
+            >
+              <div className="space-y-6">
+                <div className="flex items-start gap-4 pb-4 border-b border-[var(--border)]">
+                  <div className="w-16 h-16 rounded-lg bg-[var(--primary)]/10 border border-[var(--primary)]/30 flex items-center justify-center flex-shrink-0">
+                    <Icon className="w-8 h-8 text-[var(--primary)]" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-3 mb-2">
+                      <h2 className="text-2xl font-bold text-[var(--text)]">{entry.title}</h2>
+                      {entry.isCurrent && (
+                        <span className="px-3 py-1 bg-[var(--primary)] text-white text-xs font-bold uppercase rounded animate-pulse">
+                          Current
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 text-lg text-[var(--primary)] font-semibold mb-3">
+                      <Building2 className="w-5 h-5" />
+                      {entry.organization}
+                    </div>
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-[var(--text)]/60">
+                      <div className="flex items-center gap-2">
+                        <MapPin className="w-4 h-4" />
+                        {entry.location}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-4 h-4" />
+                        {formatDate(entry.startDate)} - {formatDate(entry.endDate)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold text-[var(--text)] mb-3">Description</h3>
+                  <p className="text-[var(--text)]/80 leading-relaxed">{entry.description}</p>
+                </div>
+
+                {entry.website && (
+                  <div className="pt-4 border-t border-[var(--border)]">
+                    <a
+                      href={entry.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-[var(--primary)] hover:text-[var(--hover)] font-medium underline underline-offset-4 transition-colors"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      Visit Website
+                    </a>
+                  </div>
+                )}
+
+                {entry.skills && entry.skills.length > 0 && (
+                  <div className="pt-4 border-t border-[var(--border)]">
+                    <h3 className="text-lg font-semibold text-[var(--text)] mb-3">Skills</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {entry.skills.map((skill, idx) => (
+                        <span
+                          key={idx}
+                          className="px-3 py-1.5 text-sm font-medium rounded-lg bg-[var(--bg)] border border-[var(--border)] text-[var(--text)]/80"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {entry.achievements && entry.achievements.length > 0 && (
+                  <div className="pt-4 border-t border-[var(--border)]">
+                    <h3 className="text-lg font-semibold text-[var(--text)] mb-3">Achievements</h3>
+                    <div className="space-y-2">
+                      {entry.achievements.map((achievement, idx) => (
+                        <div key={idx} className="flex items-start gap-3 text-[var(--text)]/80">
+                          <Star className="w-4 h-4 text-[var(--primary)] mt-0.5 flex-shrink-0" />
+                          <span>{achievement}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </WindowModal>
+          );
+        })}
       </div>
     </PageTransition>
   );
